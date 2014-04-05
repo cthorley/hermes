@@ -19,7 +19,7 @@ from configure import valid_pkg_config
 from docopt import docopt               # MIT License
 import os                               # Standard Library
 import requests                         # Apache License v2.0
-from sh import install, make, which     # ???
+import sh                               # MIT License
 import tarfile                          # Standard Library
 
 def dl_url(url):
