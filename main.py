@@ -22,16 +22,18 @@ import requests                         # Apache License v2.0
 import sh                               # MIT License
 import tarfile                          # Standard Library
 
+
 def dl_url(url):
     dl = requests.get(source_url)
-    if not dl.status == 200: # is this actually a meaningful test?
+    if not dl.status == 200:  # is this actually a meaningful test?
         return False
-    with open(pkg_id, 'wb') as archive: # pkg_id deoesn't include extension(s)
+    with open(pkg_id, 'wb') as archive:  # pkg_id deoesn't include extension(s)
         for chunk in dl.iter_content(1024):
             archive.write(chunk)
     # where does it write it? how does it know?
     # what about errors?
     return True
+
 
 def get_pkg(pkg_id):
     source_url = pkg_configs[pkg_id][source_url]
@@ -49,9 +51,11 @@ def get_pkg(pkg_id):
             # return False
     return True
 
+
 def get_pkg_config(pkg_id):
     # This is a placeholder for repository-enabled functionality
     return True
+
 
 def install_pkg(pkg_id):
     if runtime_config['install_dependencies']:
@@ -59,6 +63,7 @@ def install_pkg(pkg_id):
             if not pkg_installed(dependency):
                 install_pkg(dependency)
     # actual install code here
+
 
 def main_installer(pkg_list):
     for pkg_id in pkg_list:
@@ -70,13 +75,15 @@ def main_installer(pkg_list):
             # Error message
             return False
 
+
 def pkg_avail(pkg_id):
-    if True: # if archive is in hermes/archives and valid_archive(pkg_id)
+    if True:  # if archive is in hermes/archives and valid_archive(pkg_id)
         return True
     if get_pkg(pkg_id):
         return True
     # Error message
     return False
+
 
 def pkg_config_avail(pkg_id):
     pkg_config_path = os.path.join(hermes_dir, 'configs', (pkg_id + '.hermes'))
@@ -91,7 +98,7 @@ def pkg_config_avail(pkg_id):
             # Error message
             return False
     elif get_pkg_config(pkg_id):
-        return False # temporary short-circuit (get_pkg_config() is a dummy)
+        return False  # temporary short-circuit (get_pkg_config() is a dummy)
         pkg_config = valid_pkg_config(pkg_config_path)
         if pkg_config:
             # populate pkg_configs[pkg_id] with contents of pkg_config
@@ -99,6 +106,7 @@ def pkg_config_avail(pkg_id):
         else:
             # Error message
             return False
+
 
 def pkg_installed(pkg_id):
     # if symlink in target_dir points at package in hermes/pkg
@@ -109,6 +117,7 @@ def pkg_installed(pkg_id):
         # deal with conflict
     # Error message
     return False
+
 
 def pkg_prepared(pkg_id):
     if pkg_installed(pkg_id):
@@ -125,6 +134,7 @@ def pkg_prepared(pkg_id):
                 # Error message
                 return False
     return True
+
 
 def populate_runtime_config():
     hermes_config = dict()
@@ -147,6 +157,7 @@ def populate_runtime_config():
         runtime_config['verify_pkgs'] = True
     return hermes_config
 
+
 def valid_archive(pkg_id):
     tarball_name = pkg_id + pkg_configs[pkg_id]['tarball_ext']
     tarball_path = os.join.path(hermes_dir, 'archives', tarball_name)
@@ -155,6 +166,7 @@ def valid_archive(pkg_id):
     if not tarfile.is_tarfile(tarball_path):
         return False
     return True
+
 
 def valid_pkg(pkg_id):
     # if not valid_archive(pkg_id):
@@ -167,6 +179,7 @@ def valid_pkg(pkg_id):
         # Error message
         # return False
     return True
+
 
 if __name__ == '__main__':
     cli_args = docopt(__doc__, version='hermes v0.0.1')
